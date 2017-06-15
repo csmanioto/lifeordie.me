@@ -2,12 +2,18 @@
 # https://flask-restful.readthedocs.io/en/0.3.5/quickstart.html
 # http://pycoder.net/bospy/presentation.html#bonus-material
 
+import logging
 from flask import Flask, jsonify, request
 from flask_restful import reqparse, abort, Api, Resource
-from score import HelthRandomForest
+
+# Local imports
+from score import *
+from savedata import kafkaAPI
 
 app = Flask(__name__)
 api = Api(app)
+
+log = logging.getLogger(__name__)
 
 class IndexResource(Resource):
     """A welcome Machine Learning API."""
@@ -17,38 +23,39 @@ class IndexResource(Resource):
 
 
 class Helth(Resource):
-
     def get(self):
+        # Test only
         return {'status': 'ok'}
 
     def post(self):
+        #{"nome": "Carlos", "facebookID": 102345, "IP": "200.123.123.123","weight": {"sexo":0,"horotadia":4,"frutadia":1,"carnegordura":0, "atividade":0,"hiptertensao":0,"diabetes":1}}
         data = request.get_json(force=True)
         weigth_data = data['weight']
 
-        '''
-        Carrega a classe HelthRandomForest.
-
-        Enviamos para o construtor do HelthRandomForest um
-        dicionário.
-
-        Esse dicionário deve conter todas as variáveis que possam ser necessários
-        para obter o score através do metodo get_score().
-        '''
-        ml = HelthRandomForest(**weigth_data)
+        ml = HelthCholesterol("Base.csv", "helthcholesterol.pkl")
+        score = ml.score(**weigth_data)
+        logging.info("Socre: {}".format(score))
 
 
-        '''
-        Dicionario helth_user com o score de saúde e
-        os dados adicionais recebido pelo POST.
-        '''
-        helth_user =  {'id': data['user_id'],
-                  'score': ml.get_score(),
-                  'weight':  weigth_data
-                 }
+        kafka = kafkaAPI('192.168.18.30:9092')
+
+        helth_user = {'nome': data['nome'],
+                      'facebookID': data['facebookID'],
+                      'IP':   data['IP'],
+                      'weight': weigth_data,
+                      'score': score
+                      }
+        print(helth_user)
+        kafka.send('app', helth_user)
         return helth_user, 201
 
 
 if __name__ == '__main__':
+    logging.basicConfig(
+        format='%(asctime)s.%(msecs)s:%(name)s:%(thread)d:%(levelname)s:%(process)d:%(message)s',
+        level=logging.DEBUG
+    )
+
     api.add_resource(IndexResource, '/')
-    api.add_resource(Helth, '/helth/api/v1.0/score')
-    app.run(port=5000, debug=True)
+    api.add_resource(Helth, '/helth/api/v1.0/score_cholesterol')
+    app.run(port=8080, debug=True)
