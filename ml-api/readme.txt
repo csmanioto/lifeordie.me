@@ -1,6 +1,6 @@
 Exemplo de requisição:
 
-http://127.0.0.1:5000/helth/api/v1.0/score_cholesterol
+http://127.0.0.1:8080/helth/api/v1.0/score_cholesterol
 
 
 {"nome": "Carlos",
