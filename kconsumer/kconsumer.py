@@ -4,6 +4,7 @@ from kafka.common import KafkaError
 
 import logging
 import json
+from datetime import datetime
 import threading, queue
 
 log = logging.getLogger(__name__)
@@ -46,10 +47,12 @@ class Consumer(object):
             log.debug("Abrindo conexão com os Brokens...")
             for message in self.consumer:
                 self.consumer.commit()
-                mongo.save(message.value)
+                data = message.value
+                data["RequestData"] = datetime.strptime(data["RequestData"], '%Y-%m-%d %H:%M:%S.%f')
+                mongo.save(data)
                 log.debug("Saving into the MongoDB offset {0} , message {1} ".format(message.offset, message.value))
 
-        except KafkaError as e:
+        except Exception as e:
             log.error("Ferrou em: {0}".format(e))
         finally:
             log.debug("Fechando conexão com o kafka")

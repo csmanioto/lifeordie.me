@@ -5,6 +5,8 @@
 import logging
 from flask import Flask, jsonify, request
 from flask_restful import reqparse, abort, Api, Resource
+import base64, os
+import datetime
 
 # Local imports
 from score import *
@@ -36,26 +38,30 @@ class Helth(Resource):
         score = ml.score(**weigth_data)
         logging.info("Socre: {}".format(score))
 
-
-        kafka = kafkaAPI('192.168.18.30:9092')
-
-        helth_user = {'nome': data['nome'],
+        hash =  base64.urlsafe_b64encode(os.urandom(32))
+        helth_user = {'Application': 'ML-API',
+                      'RequestID': str(hash),
+                      'RequestData': str(datetime.datetime.utcnow()),
+                      'nome': data['nome'],
                       'facebookID': data['facebookID'],
                       'IP':   data['IP'],
                       'weight': weigth_data,
                       'score': score
                       }
-        print(helth_user)
+
+        kafka = kafkaAPI('192.168.18.30:9092')
         kafka.send('app', helth_user)
         return helth_user, 201
 
 
 if __name__ == '__main__':
     logging.basicConfig(
-        format='%(asctime)s.%(msecs)s:%(name)s:%(thread)d:%(levelname)s:%(process)d:%(message)s',
-        level=logging.DEBUG
+        format='%(asctime)s:ml-api:%(name)s:%(thread)d:%(levelname)s:%(process)d:%(message)s',
+        level=logging.INFO,
+        filename="ml-api.log"
     )
 
     api.add_resource(IndexResource, '/')
     api.add_resource(Helth, '/helth/api/v1.0/score_cholesterol')
-    app.run(port=8080, debug=True)
+    print("Iniciando API  na porta 8080")
+    app.run(host='0.0.0.0', port=8080, debug=False, use_reloader=False)
