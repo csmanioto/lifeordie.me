@@ -6,7 +6,6 @@ from kafka.common import KafkaError
 import json
 
 
-logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
 
 class kafkaAPI(object):
@@ -22,7 +21,9 @@ class kafkaAPI(object):
                                           bootstrap_servers=self.servers)
 
             log.debug("Enviando mensagem...")
-            producer.send(topic, message)
+            #producer.send(topic=topic, key="ml-api", value=message)
+            producer.send(topic,message)
+
             log.debug("Fechando conexão com o Kafka...")
             producer.close()
 

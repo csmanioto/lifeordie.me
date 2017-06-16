@@ -17,10 +17,10 @@ class HelthCholesterol(object):
         self.pkl_file = pkl_file
         self.base = base
         if not os.path.exists(self.pkl_file):
-            logging.info("Treinando a base....")
+            log.info("Treinando a base....")
             self.training(self.base, self.pkl_file)
         else:
-            logging.info("Arquivo pkf existe")
+            log.info("Arquivo pkf existe")
 
     '''
     Para uso na regressão linear com SGD (Stochastic Gradient Descent),
@@ -40,7 +40,7 @@ class HelthCholesterol(object):
             X_test = scaler.transform(X_test)
             return X_train, X_test
         except Exception as e:
-            logging.debug("Erro no fit_standardbase")
+            log.debug("Erro no fit_standardbase")
 
     '''
         Gera um png das relevancias de features e salva em log
@@ -52,12 +52,11 @@ class HelthCholesterol(object):
         feature_importance = 100.0 * (feature_importance / feature_importance.max())
         sorted_idx = np.argsort(feature_importance)
         newlist = [i for i, _ in enumerate(list(feature_importance))]
-        print("TOP Features:")
-        feature_string = "a"
+        feature_string="TOP Features:\n"
         for i in reversed(newlist):
             feature_string += "features {0}, {1} \n".format(sorted_idx[i], features_list[sorted_idx[i]])
 
-        print(feature_string)
+        log.info(feature_string)
 
         # Save image
         pos = np.arange(sorted_idx.shape[0]) + 0.5
@@ -94,37 +93,36 @@ class HelthCholesterol(object):
     def training(self, base, pkl_file):
         try:
             base = pd.read_csv(base, ";")
-            print(">> Removendo a coluna colesterol")
+            log.info(">> Removendo a coluna colesterol")
             features = base.columns.tolist()
             features.pop(features.index('Colesterol'))
 
-            print(">> Treinando a base para identificar pessoas que poderão ter problemas com colesterol elevado.")
+            log.info(">> Treinando a base para identificar pessoas que poderão ter problemas com colesterol elevado.")
             X = base[features]  # MATRIZ X COM AS FEATURES
             y = base.Colesterol  # VETOR Y COM AS RESPOSTAS
 
-            print(">> Quebrando a base entre Treino e Teste ")
-            print("Pos Debug")
+            log.info(">> Quebrando a base entre Treino e Teste ")
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-            print("Base train_test_split")
 
-            print(">> Padronizando a base (FIT)")
+            log.info(">> Padronizando a base (FIT)")
             X_train, X_test = self.fit_standardbase(X_train, X_test)
 
-            print(" Criando o modelo... ")
+            log.info(" Criando o modelo... ")
             clf = self.create_rndclf(X_train, y_train)
 
-            print(" Testando a base, incluíndo validação das feaatures importantes")
+            log.info(" Testando a base, incluíndo validação das feaatures importantes")
             self.test_model(X_test, clf)
 
-            print("Identificando top features")
+            log.info("Identificando top features")
             self.top_features(features, clf.feature_importances_)
 
-            print(" Salvando o modelo para ser utilizado... ")
+            log.info(" Salvando o modelo para ser utilizado... ")
             joblib.dump(clf, pkl_file)
         except Exception as e:
             print(e)
 
     def score(self, **weigth_data):
+        log.info("Calculando probabilidade para os dados {0}".format(weigth_data))
         value = [
             weigth_data["sexo"],
             weigth_data["horotadia"],
