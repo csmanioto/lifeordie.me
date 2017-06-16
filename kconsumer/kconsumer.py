@@ -2,43 +2,42 @@ from pymongo import MongoClient
 from kafka import KafkaConsumer
 from kafka.common import KafkaError
 
-from datetime import datetime
 import logging
 import json
-import logging, time
-import threading,queue
-
+import threading, queue
 
 log = logging.getLogger(__name__)
 
+
 class Mongo(object):
+    def __init__(self, hostname):
+        try:
+            self.client = MongoClient("mongodb://{0}".format(hostname))
+        except Exception as e:
+            log.error("Erro ao conectar no hostname: {0} - {1}".format(hostname, e))
 
-        def __init__(self, hostname):
-            try:
-                self.client = MongoClient("mongodb://{0}".format(hostname))
-            except Exception as e:
-                log.debug("Erro ao conectar no hostname: {0} - {1}".format(hostname,e))
-
-        def save(self, data):
-            try:
-                db = self.client.lifeordiedDB
-                result = db.resultados.insert_one(data)
-                log.info("Dado inserido no mongo com sucesso: {0}".format(result))
-                return result
-            except  Exception as e:
-                log.debug("Erro ao inserir no MongoDB")
+    def save(self, data):
+        try:
+            db = self.client.lifeordiedDB
+            result = db.resultados.insert_one(data)
+            log.info("Dado inserido no mongo com sucesso: {0}".format(result))
+            return result
+        except  Exception as e:
+            log.error("Erro ao inserir no MongoDB")
+        finally:
+            log.debug("Finalizando conexão com o MongodDB")
+            self.client.close()
 
 
 class Consumer(object):
-
-    def __init__(self,topic, kafkaserver, mongooserver):
-            self.mongooserver = mongooserver
-            self.consumer = KafkaConsumer(topic,
-                             bootstrap_servers=kafkaserver,
-                             group_id='mongoconsumer',
-                             value_deserializer=lambda m: json.loads(m.decode('ascii')),
-                             api_version=(0, 10, 1),
-                             auto_offset_reset='earliest')
+    def __init__(self, topic, kafkaserver, mongooserver):
+        self.mongooserver = mongooserver
+        self.consumer = KafkaConsumer(topic,
+                                      bootstrap_servers=kafkaserver,
+                                      group_id='mongoconsumer',
+                                      value_deserializer=lambda m: json.loads(m.decode('ascii')),
+                                      api_version=(0, 10, 1),
+                                      auto_offset_reset='earliest')
 
     def flush(self):
 
@@ -55,6 +54,7 @@ class Consumer(object):
         finally:
             log.debug("Fechando conexão com o kafka")
             self.consumer.close();
+
 
 '''
 def threadManager(num_threads=2):
@@ -75,8 +75,11 @@ if __name__ == '__main__':
         format='%(asctime)s:kconsumer:%(name)s:%(thread)d:%(levelname)s:%(process)d:%(message)s',
         level=logging.INFO
     )
-    kafka = Consumer("app", "192.168.18.30:9092", "192.168.18.31:27017")
-    kafka.flush()
+    try:
+        kafka = Consumer("app", "192.168.18.30:9092", "192.168.18.31:27017")
+        kafka.flush()
+    except:
+        log.error("Erro ao instanciar o Kafka Consumer")
 
     ''''
     while True:
