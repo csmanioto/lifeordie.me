@@ -59,7 +59,7 @@ class Consumer(object):
             self.consumer.close();
 
 
-'''
+''' 
 def threadManager(num_threads=2):
     threads = num_threads  # Number of threads to create
 
