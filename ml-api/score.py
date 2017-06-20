@@ -105,7 +105,7 @@ class HelthCholesterol(object):
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
             log.info(">> Padronizando a base (FIT)")
-            X_train, X_test = self.fit_standardbase(X_train, X_test)
+            #X_train, X_test = self.fit_standardbase(X_train, X_test)
 
             log.info(" Criando o modelo... ")
             clf = self.create_rndclf(X_train, y_train)
@@ -132,6 +132,7 @@ class HelthCholesterol(object):
             weigth_data["hiptertensao"],
             weigth_data["diabetes"]
         ]
+        print(value)
         clf = joblib.load(self.pkl_file)
         data = clf.predict_proba(list(value)).tolist()[0]
-        return data[0]
+        return data[1]

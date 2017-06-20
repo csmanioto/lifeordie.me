@@ -59,20 +59,6 @@ class Consumer(object):
             self.consumer.close();
 
 
-''' 
-def threadManager(num_threads=2):
-    threads = num_threads  # Number of threads to create
-
-    jobs = []
-
-    for i in range(0, threads):
-        kafka = Consumer("app","192.168.18.30:9092", "192.168.18.31:27017")
-        thread = threading.Thread(target=flush.receive)
-        jobs.append(thread)
-
-    return jobs
-'''
-
 if __name__ == '__main__':
     logging.basicConfig(
         format='%(asctime)s:kconsumer:%(name)s:%(thread)d:%(levelname)s:%(process)d:%(message)s',
@@ -83,19 +69,3 @@ if __name__ == '__main__':
         kafka.flush()
     except:
         log.error("Erro ao instanciar o Kafka Consumer")
-
-    ''''
-    while True:
-        jobs = threadManager(2)
-        tn = 0
-        for j in jobs:
-            tn += 1
-            print("Iniciando thread %i" % tn)
-            j.start()
-
-        tna = 0
-        for j in jobs:
-            if j.isAlive():
-                j.join()  # wait till threads have finished.
-                print ("FINISHED {0}".format(j))
-    '''

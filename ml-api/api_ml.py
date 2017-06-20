@@ -36,6 +36,7 @@ class Helth(Resource):
 
         ml = HelthCholesterol("Base.csv", "helthcholesterol.pkl")
         score = ml.score(**weigth_data)
+
         logging.info("Socre: {}".format(score))
 
         hash =  base64.urlsafe_b64encode(os.urandom(32))
@@ -46,6 +47,13 @@ class Helth(Resource):
                       'facebookID': data['facebookID'],
                       'IP':   data['IP'],
                       'weight': weigth_data,
+                      'sexo': weigth_data["sexo"],
+                      'hortadia': weigth_data["horotadia"],
+                      'frutadia': weigth_data["frutadia"],
+                      'carnegordura': weigth_data["carnegordura"],
+                      'atividade': weigth_data["atividade"],
+                      'hiptertensao' : weigth_data["hiptertensao"],
+                      'diabetes': weigth_data["diabetes"],
                       'score': score
                       }
 
