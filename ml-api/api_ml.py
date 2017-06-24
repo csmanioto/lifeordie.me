@@ -72,7 +72,6 @@ class Helth(Resource):
                       'nome': data['nome'],
                       'facebookID': data['facebookID'],
                       'IP':   data['IP'],
-                      'weight': weigth_data,
                       'sexo': weigth_data["sexo"],
                       'hortadia': weigth_data["horotadia"],
                       'frutadia': weigth_data["frutadia"],
