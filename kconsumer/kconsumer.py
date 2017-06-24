@@ -2,6 +2,8 @@ from pymongo import MongoClient
 from kafka import KafkaConsumer
 from kafka.common import KafkaError
 
+
+import requests
 import logging
 import json
 from datetime import datetime
@@ -39,6 +41,32 @@ except:
     config_log_level = 'DEBUG'
 
 log = logging.getLogger(__name__)
+
+
+class GeoIP(object):
+        def __init__(self, IP):
+            try:
+                send_url = 'http://freegeoip.net/json/{}'.format(IP)
+                r = requests.get(send_url)
+                self.geojson = json.loads(r.text)
+            except Exception as e :
+                log.error("Error on get GeoIP {}".format(e))
+
+
+        def getlatlong(self):
+            latlon = dict()
+            latlon['lat'] = self.geojson['latitude']
+            latlon['lon'] = self.geojson['longitude']
+            return latlon
+
+        def getRegion(self):
+            region = dict()
+            region['Estado'] = self.geojson['region_name']
+            region['Cidadade'] = self.geojson['city']
+            region['Pais'] = self.geojson['country_code']
+            return region
+
+
 
 
 class Mongo(object):
@@ -84,6 +112,15 @@ class Consumer(object):
                 self.consumer.commit()
                 data = message.value
                 data["RequestData"] = datetime.strptime(data["RequestData"], '%Y-%m-%d %H:%M:%S.%f')
+
+                geoip = GeoIP(data["IP"])
+                data['geoIP_Pais'] = geoip.getRegion()['Pais']
+                data['geoIP_Estado'] = geoip.getRegion()['Estado']
+                data['geoIP_Cidadade'] = geoip.getRegion()['Cidadade']
+
+                data['geoIP_Latitude'] = geoip.getlatlong()['lat']
+                data['geoIP_Longitude'] = geoip.getlatlong()['lon']
+
                 mongo.save(data)
                 log.debug("Saving into the MongoDB offset {0} , message {1} ".format(message.offset, message.value))
             self.consumer.close()
@@ -102,7 +139,7 @@ if __name__ == '__main__':
         #,filename=config_log_file
     )
     try:
-        while True:
+      #  while True:
             kafka = Consumer(config_kafka_topic, config_kafka_server, config_kafka_group_id, config_mongo_server, config_mongo_db, config_mongo_collection)
             kafka.flush()
 
