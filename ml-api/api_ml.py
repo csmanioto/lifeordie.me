@@ -3,6 +3,7 @@
 # http://pycoder.net/bospy/presentation.html#bonus-material
 
 import logging
+from configparser import ConfigParser
 from flask import Flask, jsonify, request
 from flask_restful import reqparse, abort, Api, Resource
 import base64, os
@@ -12,10 +13,35 @@ import datetime
 from score import *
 from savedata import kafkaAPI
 
+config = ConfigParser()
+try:
+    config.read("config.ini")
+
+    config_kafka_server = config.get('kafka', 'broken')
+    config_kafka_topic = config.get('kafka', 'topic')
+
+    config_api_tcp_port = config.getint('api', 'tcp_port')
+    config_flask_debug = config.getboolean('api', 'flash_debug')
+    config_flask_reloader = config.getboolean('api', 'flash_reloader')
+
+    config_log_file = config.get('log', 'logfile')
+    config_log_level = config.get('log', 'loglevel')
+
+except:
+    config_kafka_server = '192.168.18.30:9092'
+    config_kafka_topic = 'app'
+    config_api_tcp_port = 8080
+    api_debug = True
+    config_log_file = ml - api.log
+
+
+
+log = logging.getLogger(__name__)
+
 app = Flask(__name__)
 api = Api(app)
 
-log = logging.getLogger(__name__)
+
 
 class IndexResource(Resource):
     """A welcome Machine Learning API."""
@@ -57,19 +83,19 @@ class Helth(Resource):
                       'score': score
                       }
 
-        kafka = kafkaAPI('192.168.18.30:9092')
-        kafka.send('app', helth_user)
+        kafka = kafkaAPI(config_kafka_server)
+        kafka.send(config_kafka_topic, helth_user)
         return helth_user, 201
 
 
 if __name__ == '__main__':
     logging.basicConfig(
         format='%(asctime)s:ml-api:%(name)s:%(thread)d:%(levelname)s:%(process)d:%(message)s',
-        level=logging.INFO,
-        filename="ml-api.log"
+        level=config_log_level,
+        filename=config_log_file
     )
 
     api.add_resource(IndexResource, '/')
     api.add_resource(Helth, '/helth/api/v1.0/score_cholesterol')
     print("Iniciando API  na porta 8080")
-    app.run(host='0.0.0.0', port=8080, debug=False, use_reloader=False)
+    app.run(host='0.0.0.0', port=config_api_tcp_port, debug=config_flask_debug, use_reloader=config_flask_reloader)
