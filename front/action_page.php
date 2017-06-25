@@ -82,15 +82,42 @@ if ( $status != 201 ) {
 
 curl_close($curl);
 
-$response = json_decode($json_response, true);
-echo json_encode($response, JSON_PRETTY_PRINT);
+$response = json_decode($json_response);
+//echo json_encode($response, JSON_PRETTY_PRINT);
 // { "Application": "ML-API", "IP": "127.0.0.1", "RequestData": "2017-06-25 13:54:23.592365", "RequestID": "b'Wktk87EtULzazJ7zhTaxzUW4Hfnk1l52bXSpr3lrdAw='", "atividade": 0, "carnegordura": 1, "diabetes": 0, "facebookID": 1921804768, "frutadia": 2, "hiptertensao": 1, "hortadia": 1, "idade": 35, "imc": "29.39", "nome": "Carlos Smanioto", "score": 0.34488067488067486454639265502919442951679229736328125, "sexo": 1 }
 
 // Exibindo os perfils de saúde.
-$score = $response->score;
+echo "<br>";
+$score = (float) $response->score;
 
-echo "IMC: " . $imc;
-echo "Caracas mano: " . $score;
+//echo "IMC: " . $imc;
+//echo "<br>";
+//echo "Caracas mano: " . $score;
+
+if ($score < 0.2) {
+    echo "<html>";
+    echo  "<h1> Você tem muita saúde para gastar heim  ". $nome . "</h1>";
+    echo  "<br> Teu score foi baixo:  " . $score . " - <bold>isso signifca que tem poucas possibilidades de colesterol</bold> ";
+    echo  "<br> Teu IMC: " . $imc;
+    echo  "<br> Trofeu - Charlie Sheen ";
+}
+
+if ($score > 0.2 && $score < 0.45) {
+    echo "<html>";
+    echo  "<h1> Você esta na média! Sabe viver a vida :)   ". $nome . "</h1>";
+    echo  "<br> Teu score foi médio:  " . $score . " - <bold>isso signifca que dá para abusar, só um pouquinho..</bold> ";
+    echo  "<br> Teu IMC: " . $imc;
+    echo  "<br> Trofeu - Seu Madruga ";
+}
+
+
+if ($score > 0.45 ) {
+    echo "<html>";
+    echo  "<h1> Você esta F*** e é bom se cuidar!  ". $nome . "</h1>";
+    echo  "<br> Teu score foi alto:  " . $score . " - <bold>isso signifca que você esta F*** e pode morrer logo...</bold> ";
+    echo  "<br> Teu IMC: " . $imc;
+    echo  "<br> Trofeu - Inri Cristo";
+}
 
 
 ?>
