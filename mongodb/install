@@ -36,5 +36,15 @@ You can optionally ensure that MongoDB will start following a system reboot by i
 sudo chkconfig mongod on
 
 
+Create dbs and collections
 
+use lifeordie
+
+db.createCollection("app")
+
+db.createCollection("log")
+
+db.app.find()
+
+db.log.find()
 
