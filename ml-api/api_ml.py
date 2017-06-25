@@ -98,5 +98,5 @@ if __name__ == '__main__':
 
     api.add_resource(IndexResource, '/')
     api.add_resource(Helth, '/helth/api/v1.0/score_cholesterol')
-    print("Iniciando API  na porta 8080")
+    print("Iniciando API  na porta {}".format(config_api_tcp_port))
     app.run(host='0.0.0.0', port=config_api_tcp_port, debug=config_flask_debug, use_reloader=config_flask_reloader)
