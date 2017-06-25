@@ -105,7 +105,7 @@ class HelthCholesterol(object):
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
 
             log.info(">> Padronizando a base (FIT)")
-            #X_train, X_test = self.fit_standardbase(X_train, X_test)
+            X_train, X_test = self.fit_standardbase(X_train, X_test)
 
             log.info(" Criando o modelo... ")
             clf = self.create_rndclf(X_train, y_train)
@@ -123,14 +123,18 @@ class HelthCholesterol(object):
 
     def score(self, **weigth_data):
         log.info("Calculando probabilidade para os dados {0}".format(weigth_data))
+
+
         value = [
             weigth_data["sexo"],
-            weigth_data["horotadia"],
+            weigth_data["hortadia"],
             weigth_data["frutadia"],
             weigth_data["carnegordura"],
             weigth_data["atividade"],
             weigth_data["hiptertensao"],
-            weigth_data["diabetes"]
+            weigth_data["diabetes"],
+            weigth_data["idade"],
+            weigth_data["imc"]
         ]
         print(value)
         clf = joblib.load(self.pkl_file)

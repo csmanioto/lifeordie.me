@@ -34,13 +34,10 @@ except:
     api_debug = True
     config_log_file = ml - api.log
 
-
-
 log = logging.getLogger(__name__)
 
 app = Flask(__name__)
 api = Api(app)
-
 
 
 class IndexResource(Resource):
@@ -56,7 +53,7 @@ class Helth(Resource):
         return {'status': 'ok'}
 
     def post(self):
-        #{"nome": "Carlos", "facebookID": 102345, "IP": "200.123.123.123","weight": {"sexo":0,"horotadia":4,"frutadia":1,"carnegordura":0, "atividade":0,"hiptertensao":0,"diabetes":1}}
+        # {"nome": "Carlos", "facebookID": 102345, "IP": "200.123.123.123","weight": {"sexo":0,"horotadia":4,"frutadia":1,"carnegordura":0, "atividade":0,"hiptertensao":0,"diabetes":1}}
         data = request.get_json(force=True)
         weigth_data = data['weight']
 
@@ -65,19 +62,24 @@ class Helth(Resource):
 
         logging.info("Socre: {}".format(score))
 
-        hash =  base64.urlsafe_b64encode(os.urandom(32))
+        hash = base64.urlsafe_b64encode(os.urandom(32))
+
+
+
         helth_user = {'Application': 'ML-API',
                       'RequestID': str(hash),
                       'RequestData': str(datetime.datetime.utcnow()),
                       'nome': data['nome'],
                       'facebookID': data['facebookID'],
-                      'IP':   data['IP'],
+                      'IP': data['IP'],
                       'sexo': weigth_data["sexo"],
-                      'hortadia': weigth_data["horotadia"],
+                      'idade':  weigth_data["idade"],
+                      'imc' : weigth_data["imc"],
+                      'hortadia': weigth_data["hortadia"],
                       'frutadia': weigth_data["frutadia"],
                       'carnegordura': weigth_data["carnegordura"],
                       'atividade': weigth_data["atividade"],
-                      'hiptertensao' : weigth_data["hiptertensao"],
+                      'hiptertensao': weigth_data["hiptertensao"],
                       'diabetes': weigth_data["diabetes"],
                       'score': score
                       }
