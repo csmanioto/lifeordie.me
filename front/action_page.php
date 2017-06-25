@@ -6,16 +6,20 @@ ini_set('display_errors', 1);
 
 $IP = $_SERVER['REMOTE_ADDR'];
 
+//print_r($_GET);
+// Array ( [nome] => Carlos [sobrenome] => Smaniotto [idade] => 35 [sexo] => 0 [peso] => 90 [altura] => 1.75 [hipertensao] => on [diabete] => on [hortadia] => 3 [frutadia] => 3 [carnegordura] => on [atividadefisica] => on )
+
 $pnome = trim($_GET["nome"]);
 $sobrenome = trim($_GET["sobrenome"]);
 $sexo = (int) $_GET["sexo"];
 $idade = (int) $_GET["idade"];
 $peso = (float)  $_GET["peso"];
 $altura = (float) $_GET["altura"];
-$carnegordura = (int) $_GET["carnegordura"];
-$atividadefisica = (int) $_GET["atividadefisica"];
-$hipertensao = (int) $_GET["hipertensao"];
-$diabete = (int) $_GET["diabete"];
+
+$carnegordura = (int) ($_GET["carnegordura"] == "on" ? 1 : 0);
+$atividadefisica = (int) ($_GET["atividadefisica"] == "on" ? 1 : 0);
+$hipertensao = (int) ($_GET["hipertensao"] == "on" ? 1 : 0);
+$diabete = (int) ($_GET["diabete"] == "on" ? 1 : 0);
 $frutadia = (int) $_GET["frutadia"];
 $hortadia  = (int) $_GET["hortadia"];
 

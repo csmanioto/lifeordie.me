@@ -1,44 +1,115 @@
-<html>
-<H1> Life or Die Simple Page </H1>
-<form action="action_page.php" method="GET">
-    Nome: <input type=text name="nome"/>
-    <br>
-    Sobrenome: <input type=text name="sobrenome"/>
-    <p>
-        idade: <input type="text" name="idade"><br>
-        Peso : <input type=text name="peso"><br>
-        Altura : <input type=text name="altura">
-    <p>
-        Sexo: <input type="radio" name="sexo" value="1" checked> Masculino
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>lifeordie.me</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 
-        <input type="radio" name="sexo" value="0" checked> Feminino
-    <p>
+</head>
+<body>
+  <form action="action_page.php" method="GET" role="form" align="center">
+	<div class="container">
+	 	<div class="column">
+	 	<br><br>
+	 		 <div class="row">
+		 		<div class="col-sm-10">
+		 		<img src="img/logo.png" class="img-responsive" style="margin:0 auto;"/>
+		 		</div>
+			</div> 
+			<div class="row">
+		 		<div class="col-sm-10" align="center" ><p><h4>Bora verificar sua saude!</h4></p></div>
+			</div> 
+			<br>
+		 	<div class="row">
+		 		<div class="col-sm-3"><label for="InputNome">Nome</label></div>
+		  		<div class="col-sm-6"><input type="text" class="form-control" id="nome" name="nome"></div>
+			</div>             
+			<br>
+			<div class="row">
+		 		<div class="col-sm-3"><label for="InputSobrenome">Sobrenome</label></div>
+		  		<div class="col-sm-6"><input type="text" class="form-control" id="sobrenome" name="sobrenome"></div>
+			</div> 
+			<br>
+		  	<div class="row">
+		 		<div class="col-sm-3">Idade</div>
+		  		<div class="col-sm-3"><input type="text" class="form-control" id="idade" name="idade">
+		  		</div>
+		  		<div class="col-sm-4">
+					<label class="radio-inline"> <input type="radio" class="form-control" name="sexo" id="sexo" value="0"> <br><br>Masculino </label>
+	            	<label class="radio-inline"> <input type="radio" class="form-control" name="sexo" id="sexo" value="1"> <br><br>Feminino </label>
+	            	<br><br>
+	            </div>
+			</div>
+			<div class="row">
+		 		<div class="col-sm-3">Peso</div>
+		  		<div class="col-sm-2"><input type="text" class="form-control" id="peso" name="peso">
+		  		</div>
+		 		<div class="col-sm-1">Altura</div>
+		  		<div class="col-sm-3"><input type="text" class="form-control" id="altura" name="altura">
+		  		</div>			
+			</div>
+			<br><br>
+			<div class="row">
+		 		<div class="col-sm-6">Tem diagnóstico de Hipertensão?</div>
+		  		<div class="col-sm-2"><input data-toggle="toggle" data-onstyle="success" value-data-on="0" data-on="Sim" data-offstyle="warning" data-off="Não" value-data-off="1" type="checkbox" name="hipertensao" id="hipertensao" class="form-control">
+		  		</div>
+			</div>
+			<br>
+			<div class="row">
+		 		<div class="col-sm-6">Tem diagnóstico de Diabetes?</div>
+		  		<div class="col-sm-2"><input data-toggle="toggle" data-onstyle="success" data-on="Sim" value-data-on="0" value-data-off="1" data-offstyle="warning" data-off="Não" type="checkbox" name="diabete" id="diabete">
+		  		</div>
+			</div>
+			<br>
+			<div class="row">
+		 		<div class="col-sm-6">Quantas hortaliças por semana?</div>
+		  		<div class="col-sm-6">
+		  			<label class="radio-inline"> <input type="radio" name="hortadia" id="hortadia" value="0"> 0 </label>
+		  			<label class="radio-inline"> <input type="radio" name="hortadia" id="hortadia" value="1"> 1 </label>
+		  			<label class="radio-inline"> <input type="radio" name="hortadia" id="hortadia" value="2"> 2 </label>
+		  			<label class="radio-inline"> <input type="radio" name="hortadia" id="hortadia" value="3"> 3 </label>
+		  			<label class="radio-inline"> <input type="radio" name="hortadia" id="hortadia" value="4"> 4 ou + </label>
+		  		</div>
+		  	</div>
+		  	<br>
+			<div class="row">
+	 			<div class="col-sm-6">Quantas frutas ou sucos naturais por dia?</div>
+	  			<div class="col-sm-6">
+		  			<label class="radio-inline"> <input type="radio" name="frutadia" id="frutadia" value="0"> 0 </label>
+		  			<label class="radio-inline"> <input type="radio" name="frutadia" id="frutadia" value="1"> 1 </label>
+		  			<label class="radio-inline"> <input type="radio" name="frutadia" id="frutadia" value="2"> 2 </label>
+		  			<label class="radio-inline"> <input type="radio" name="frutadia" id="frutadia" value="3"> 3 ou + </label>
+		  		</div>
+	  		</div>
+	  		<br>
+			<div class="row">
+		 		<div class="col-sm-6">Come carne com gordura?</div>
+		  		<div class="col-sm-6"><input data-toggle="toggle" data-onstyle="success" data-on="Sim" value-data-on="0" data-offstyle="warning" data-off="Não" type="checkbox" name="carnegordura" id="carnegordura" value-data-off="1">
+		  		</div>
+			</div>
+			<br>
+			<div class="row">
+		 		<div class="col-sm-6">Pratica atividade física?</div>
+		 		<div class="col-sm-6">
+		  		<input data-toggle="toggle" data-onstyle="success" data-on="Sim" data-offstyle="warning" data-off="Não" type="checkbox" name="atividadefisica" id="atividadefisica" value-data-on="0" value-data-off="1">
+		  		</div>
+			</div>
+			<br><br>
+			<div class="row">
+			<div></div>
+		 		<div align="right"><button type="submit" class="btn btn-success" value="ok">Submeter!</button>
+		 		</div>
+		 		<br>
+		 		<br>
+		 	</div>
 
-        Come carne gordurosa ?: <select name="carnegordura">
-        <option value="0">NÃO</option>
-        <option value="1">SIM</option>
-    </select>
-    <p>
-        Fisicamente ativo?:
-        <select name="atividadefisica">
-            <option value="0">NÃO</option>
-            <option value="1">SIM</option>
-        </select>
-    <p>
-        Hipertensão ?:<select name="hipertensao">
-        <option value="0">NÃO</option>
-        <option value="1">SIM</option>
-    </select>
-    <p>
-        Diabetes ?:<select name="diabete">
-        <option value="0">NÃO</option>
-        <option value="1">SIM</option>
-    </select>
-    <p>
-        QTD de Frutas/dias : <input type=text name="frutadia">
-        <br>
-        QTD de Hortaliças/dias : <input type=text name="hortadia">
-    <p>
-        <input type="submit" value="OK">
+		</div>
+  	</div>
 </form>
-</html>
+</body>
+</html> 
