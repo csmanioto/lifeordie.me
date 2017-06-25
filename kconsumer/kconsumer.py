@@ -47,6 +47,7 @@ class GeoIP(object):
         def __init__(self, IP):
             try:
                 send_url = 'http://freegeoip.net/json/{}'.format(IP)
+                log.debug("Conectando em {} para caputar GeoIP".format(send_url))
                 r = requests.get(send_url)
                 self.geojson = json.loads(r.text)
             except Exception as e :
@@ -87,9 +88,12 @@ class Mongo(object):
         except  Exception as e:
             log.error("Erro ao inserir no MongoDB")
         finally:
-            log.debug("Finalizando conexão com o MongodDB")
-            self.client.close()
-
+            try:
+                self.client.disconnect()
+                log.debug("Finalizando conexão com o MongodDB")
+            except Exception as e:
+                log.error("Error ao finalizar conexão com o MongodDB: {}".format(e))
+                exit(1)
 
 class Consumer(object):
     def __init__(self, topic, kafkaserver, kafka_group_id, mongooserver, mongodb, collection):
@@ -136,10 +140,11 @@ if __name__ == '__main__':
     logging.basicConfig(
         format='%(asctime)s:kconsumer:%(name)s:%(thread)d:%(levelname)s:%(process)d:%(message)s',
         level=config_log_level
-        #,filename=config_log_file
+        ,filename=config_log_file
     )
+    log.info("KConsumer iniciado com sucesso :)")
     try:
-      #  while True:
+        while True:
             kafka = Consumer(config_kafka_topic, config_kafka_server, config_kafka_group_id, config_mongo_server, config_mongo_db, config_mongo_collection)
             kafka.flush()
 
