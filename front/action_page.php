@@ -62,8 +62,8 @@ $data = array(
 
 
 
-// $uri = "http://ml-api.lifeordie.me:80/helth/api/v1.0/score_cholesterol";
-$uri = "http://127.0.0.1:8080/helth/api/v1.0/score_cholesterol";
+$uri = "http://ml-api.lifeordie.me:80/helth/api/v1.0/score_cholesterol";
+//$uri = "http://127.0.0.1:8080/helth/api/v1.0/score_cholesterol";
 $content = json_encode($data, JSON_PRETTY_PRINT);
 
 
