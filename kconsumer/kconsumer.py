@@ -8,7 +8,7 @@ import logging
 import json
 from datetime import datetime
 from configparser import ConfigParser
-import threading, queue
+import threading, queue, time
 
 
 config = ConfigParser()
@@ -50,6 +50,8 @@ class GeoIP(object):
                 log.debug("Conectando em {} para caputar GeoIP".format(send_url))
                 r = requests.get(send_url)
                 self.geojson = json.loads(r.text)
+                log.debug("GeoIp resultcode: {}".format(r))
+                log.debug("GeoIp Result data: {}".format(self.geojson ))
             except Exception as e :
                 log.error("Error on get GeoIP {}".format(e))
 
@@ -62,8 +64,18 @@ class GeoIP(object):
 
         def getRegion(self):
             region = dict()
+            if len(self.geojson['region_name']) < 1:
+                self.geojson['region_name'] = "Sao Paulo"
+
             region['Estado'] = self.geojson['region_name']
+
+            if len(self.geojson['city']) < 1:
+                self.geojson['city'] = "Sao Paulo"
+
             region['Cidadade'] = self.geojson['city']
+
+            if len(self.geojson['country_code']) < 1:
+                self.geojson['country_code'] = "BR"
             region['Pais'] = self.geojson['country_code']
             return region
 
@@ -73,8 +85,8 @@ class GeoIP(object):
 class Mongo(object):
     def __init__(self, mongoserver, mongodb, collection):
         try:
-            conn = MongoClient("mongodb://{}".format(mongoserver))
-            self.client = conn[mongodb][collection]
+            self.conn = MongoClient("mongodb://{}".format(mongoserver))
+            self.client = self.conn[mongodb][collection]
         except Exception as e:
             log.error("Erro ao conectar no hostname: {0} - {1}".format(mongoserver, e))
 
@@ -89,28 +101,31 @@ class Mongo(object):
             log.error("Erro ao inserir no MongoDB")
         finally:
             try:
-                self.client.disconnect()
+                self.conn.close()
                 log.debug("Finalizando conexão com o MongodDB")
+                pass
             except Exception as e:
                 log.error("Error ao finalizar conexão com o MongodDB: {}".format(e))
                 exit(1)
 
 class Consumer(object):
-    def __init__(self, topic, kafkaserver, kafka_group_id, mongooserver, mongodb, collection):
+    def __init__(self, topic, kafkaserver, kafka_group_id, mongooserver, mongo_database, collection):
         self.mongoo_server = mongooserver
-        self.mongo_db = mongodb
+        self.mongo_database = mongo_database
         self.mongo_collection = collection
         self.consumer = KafkaConsumer(topic,
                                       bootstrap_servers = kafkaserver,
                                       group_id = kafka_group_id,
                                       value_deserializer = lambda m: json.loads(m.decode('ascii')),
                                       api_version=(0, 10, 1),
-                                      auto_offset_reset='earliest')
+                                      enable_auto_commit=False,
+                                      auto_offset_reset='earliest'
+                                      )
 
     def flush(self):
 
         try:
-            mongo = Mongo(self.mongoo_server, self.mongo_db, self.mongo_collection)
+            mongo = Mongo(self.mongoo_server, self.mongo_database, self.mongo_collection)
             log.debug("Abrindo conexão com os Brokens...")
             for message in self.consumer:
                 self.consumer.commit()
@@ -126,14 +141,17 @@ class Consumer(object):
                 data['geoIP_Longitude'] = geoip.getlatlong()['lon']
 
                 mongo.save(data)
+                self.consumer.commit()
                 log.debug("Saving into the MongoDB offset {0} , message {1} ".format(message.offset, message.value))
             self.consumer.close()
 
         except Exception as e:
             log.error("Ferrou em: {0}".format(e))
+            pass
         finally:
             log.debug("Fechando conexão com o kafka")
             self.consumer.close();
+
 
 
 if __name__ == '__main__':
@@ -147,6 +165,8 @@ if __name__ == '__main__':
         while True:
             kafka = Consumer(config_kafka_topic, config_kafka_server, config_kafka_group_id, config_mongo_server, config_mongo_db, config_mongo_collection)
             kafka.flush()
+            time.sleep(5)  # Delay for 5 seconds.
+
 
     except Exception as e:
         log.error("Erro ao instanciar o Kafka Consumer: {}".format(e))
