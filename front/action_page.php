@@ -1,7 +1,7 @@
 <?php
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// error_reporting(E_ALL);
+// ini_set('display_errors', 1);
 
 
 $IP = $_SERVER['REMOTE_ADDR'];
@@ -97,31 +97,102 @@ $score = (float) $response->score;
 //echo "IMC: " . $imc;
 //echo "<br>";
 //echo "Caracas mano: " . $score;
+echo  "<!DOCTYPE html>
+       <html lang=\"en\">
+       <head>
+            <title>lifeordie.me</title>
+            <meta charset=\"utf-8\">
+            <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
+            <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">
+            <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js\"></script>
+            <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js\"></script>
+            <link href=\"https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css\" rel=\"stylesheet\">
+            <script src=\"https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js\"></script>
+        </head>
+        <body>
+
+
+        <div class=\"row\">
+            <div class=\"col-md-4\">
+            </div>
+            <div class=\"col-md-8\">
+                <h1>Teu Resultado</h1>
+            </div>
+        </div>";
+
+
+
 
 if ($score < 0.2) {
-    echo "<html>";
-    echo  "<h1> Você tem muita saúde para gastar heim  ". $nome . "</h1>";
-    echo  "<br> Teu score foi baixo:  " . $score . " - <bold>isso signifca que tem poucas possibilidades de colesterol</bold> ";
-    echo  "<br> Teu IMC: " . $imc;
-    echo  "<br> Trofeu - Charlie Sheen ";
+    echo "<div class=\"row\">
+                <div class=\"col-md-6 brd\">
+                    <div class=\"center-block\">
+                            Você tem muita saúde para gastar heim " . $nome . "
+                             <BR>
+                             Teu score foi baixo:  " . $score . ".
+                             <br>
+                             Teu IMC: "  . $imc  ."
+                             <br>
+                             <img src=\"img/sheen.png\" alt=\"Charlie Sheen\" />
+                    </div>
+                 </div>";
+
+
+    #echo  "<h1> Você tem muita saúde para gastar heim  ". $nome . "</h1>";
+    #echo  "<br> Teu score foi baixo:  " . $score . " - <bold>isso signifca que tem poucas possibilidades de colesterol</bold> ";
+    #echo  "<br> Teu IMC: " . $imc;
+    #echo  "<br> Trofeu - Charlie Sheen ";
 }
 
 if ($score > 0.2 && $score < 0.45) {
-    echo "<html>";
-    echo  "<h1> Você esta na média! Sabe viver a vida :)   ". $nome . "</h1>";
-    echo  "<br> Teu score foi médio:  " . $score . " - <bold>isso signifca que dá para abusar, só um pouquinho..</bold> ";
-    echo  "<br> Teu IMC: " . $imc;
-    echo  "<br> Trofeu - Seu Madruga ";
+    #echo "<html>";
+    #echo  "<h1> Você esta na média! Sabe viver a vida :)   ". $nome . "</h1>";
+    #echo  "<br> Teu score foi médio:  " . $score . " - <bold>isso signifca que dá para abusar, só um pouquinho..</bold> ";
+    #echo  "<br> Teu IMC: " . $imc;
+    #echo  "<br> Trofeu - Seu Madruga ";
+    echo "<div class=\"row\">
+                <div class=\"col-md-6 brd\">
+                    <div class=\"center-block\">
+                            Você tem saúde média ! Sabe viver a vida heim " . $nome . "
+                             <BR>
+                             Teu score foi medio:  " . $score . ".
+                             <br>
+                             Teu IMC: "  . $imc  ."
+                             <br>
+                             <img src=\"img/madruga.png\" alt=\"Seu Madruga\" />
+                    </div>
+                 </div>";
+
+
+
 }
 
 
 if ($score > 0.45 ) {
-    echo "<html>";
-    echo  "<h1> Você esta F*** e é bom se cuidar!  ". $nome . "</h1>";
-    echo  "<br> Teu score foi alto:  " . $score . " - <bold>isso signifca que você esta F*** e pode morrer logo...</bold> ";
-    echo  "<br> Teu IMC: " . $imc;
-    echo  "<br> Trofeu - Inri Cristo";
+    #echo "<html>";
+    #echo  "<h1> Você esta F*** e é bom se cuidar!  ". $nome . "</h1>";
+    #echo  "<br> Teu score foi alto:  " . $score . " - <bold>isso signifca que você esta F*** e pode morrer logo...</bold> ";
+    #echo  "<br> Teu IMC: " . $imc;
+    #echo  "<br> Trofeu - Inri Cristo";
+    echo "<div class=\"row\">
+                <div class=\"col-md-6 brd\">
+                    <div class=\"center-block\">
+                            Você esta F**** e é bom se cuidar... " . $nome . "
+                             <BR>
+                             Teu score foi alto:  " . $score . ".
+                             <br>
+                             Teu IMC: "  . $imc  ."
+                             <br>
+                             <img src=\"img/inri.png\" alt=\"Inri Cristo\" />
+                    </div>
+                 </div>";
+
+
+
 }
 
+echo "</div>
+     </body>
+    </html> ";
 
 ?>
