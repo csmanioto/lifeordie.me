@@ -123,7 +123,7 @@ echo  "<!DOCTYPE html>
 
 
 
-if ($score < 0.2) {
+if ($score <= 0.20) {
     echo "<div class=\"row\">
                 <div class=\"col-md-6 brd\">
                     <div class=\"center-block\">
@@ -144,7 +144,7 @@ if ($score < 0.2) {
     #echo  "<br> Trofeu - Charlie Sheen ";
 }
 
-if ($score > 0.2 && $score < 0.45) {
+if ($score >= 0.21 && $score <= 0.45) {
     #echo "<html>";
     #echo  "<h1> Você esta na média! Sabe viver a vida :)   ". $nome . "</h1>";
     #echo  "<br> Teu score foi médio:  " . $score . " - <bold>isso signifca que dá para abusar, só um pouquinho..</bold> ";
@@ -168,7 +168,7 @@ if ($score > 0.2 && $score < 0.45) {
 }
 
 
-if ($score > 0.45 ) {
+if ($score >= 0.46 ) {
     #echo "<html>";
     #echo  "<h1> Você esta F*** e é bom se cuidar!  ". $nome . "</h1>";
     #echo  "<br> Teu score foi alto:  " . $score . " - <bold>isso signifca que você esta F*** e pode morrer logo...</bold> ";
