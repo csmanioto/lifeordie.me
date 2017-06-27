@@ -58,7 +58,7 @@ Basta um CURL na API na porta 80
 
 - curl http://127.0.0.1:80
 
-- curl -v -i -X POST -H "Content-Type: application/json" -H "Accept: application/json" -d '{"user_id": 102345, "weight": {"idade":39,"estado_civil":1,"fumante":1,"ativo":0,"pressao":1, "imc": 29.4}}'  http://127.0.0.1:80/helth/api/v1.0/score_cholesterol
+- curl -v -i -X POST -H "Content-Type: application/json" -H "Accept: application/json" -d '{ "nome": "Carlos Smanioto", "facebookID": 543845932, "IP": "127.0.0.1", "weight": { "sexo": 1, "idade": 35, "imc": "29.39", "hortadia": 1, "frutadia": 2, "carnegordura": 1, "atividade": 0, "hiptertensao": 1, "diabetes": 0 } }' http://127.0.0.1:80/helth/api/v1.0/score_cholesterol
 
 
 ### FB-API
